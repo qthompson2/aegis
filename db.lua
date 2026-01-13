@@ -23,9 +23,9 @@ function Database:new()
 	setmetatable(obj, {__index = self})
 	self._db = obj
 
-	self:loadRemoteKeys()
-	self:loadLocalUsers()
-	self:loadKey()
+	obj:loadRemoteKeys()
+	obj:loadLocalUsers()
+	obj:loadKey()
 
 	return obj
 end
@@ -71,7 +71,8 @@ function Database:loadRemoteKeys()
 
 		if file then
 			local line = file.readLine()
-			while #line > 0 do
+			while line do
+				line = line .. "\n"
 				local _, _, raw_id, raw_key, raw_n = line:find("(.-)=(.-):(.-)\n")
 				local proc_id, proc_key, proc_n = tonumber(raw_id), tonumber(raw_key), tonumber(raw_n)
 
@@ -146,11 +147,14 @@ function Database:loadLocalUsers()
 
 		if file then
 			local line = file.readLine()
-			while #line > 0 do
-				local _, _, username, password_hash = line:find("(.-)=(.=)\n")
+			while line do
+				line = line .. "\n"
+				local _, _, username, password_hash = line:find("(.-)=(.-)\n")
 
-				if #username > 0 and #password_hash > 0 then
-					self.tables.remote_keys[username] = password_hash
+				if type(username) == "string" and type(password_hash) == "string" then
+					if #username > 0 and #password_hash > 0 then
+						self.tables.remote_keys[username] = password_hash
+					end
 				end
 				line = file.readLine()
 			end

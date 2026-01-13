@@ -1,0 +1,1 @@
+Database = require("db"):new()

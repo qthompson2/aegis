@@ -13,14 +13,31 @@ local function power(base, exponent, m)
 	return result
 end
 
+local function split(str)
+    local characters = {}
+    -- The pattern "(.)" captures each character in the string
+    for char in string.gmatch(str, "(.)") do
+        table.insert(characters, char)
+    end
+    return characters
+end
+
+local function join(list)
+	local res = ""
+	for _, item in pairs(list) do
+		res = res .. tostring(item)
+	end
+	return res
+end
+
 local function encrypt_char(plaintext, key)
 	return power(plaintext, key[1], key[2])
 end
 
 local function encrypt(plaintext, key)
 	local res = {}
-	for _, char in ipairs(plaintext) do
-		table.insert(res, encrypt_char(char, key))
+	for _, char in ipairs(split(plaintext)) do
+		table.insert(res, encrypt_char(char:byte(), key))
 	end
 	return res
 end
@@ -32,9 +49,9 @@ end
 local function decrypt(ciphertext, key)
 	local res = {}
 	for _, char in ipairs(ciphertext) do
-		table.insert(res, decrypt_char(char, key))
+		table.insert(res, string.char(decrypt_char(char, key)))
 	end
-	return res
+	return join(res)
 end
 
 local function mod_inverse(e, phi)
