@@ -115,7 +115,7 @@ local function generate_keys(p, q)
 
 	local d = mod_inverse(e, phi)
 
-	return {e, n}, {d, n}
+	return e, d, n
 end
 
 return {
