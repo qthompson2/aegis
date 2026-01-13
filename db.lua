@@ -30,15 +30,15 @@ function Database:new()
 	return obj
 end
 
-function Database:insertRemoteKey(sender_id, public_key)
-	if type(sender_id) ~= "number" then return false, "invalid sender_id type" end
+function Database:insertRemoteKey(id, public_key)
+	if type(id) ~= "number" then return false, "invalid sender_id type" end
 	if type(public_key) ~= "table" then return false, "invalid public_key type" end
 	if type(public_key[1]) ~= "number" or type(public_key[2]) ~= "number" then return false, "invalid public_key format" end
 
-	if self.tables.remote_keys[sender_id] then
+	if self.tables.remote_keys[id] then
 		local file = fs.open(REMOTE_KEYS_PATH, "w")
 		if file then
-			self.tables.remote_keys[sender_id] = public_key
+			self.tables.remote_keys[id] = public_key
 			for sid, key in pairs(self.tables.remote_keys) do
 				file.writeLine(tostring(sid) .. "=" .. tostring(key[1]) .. ":" .. tostring(key[2]))
 			end
@@ -50,9 +50,9 @@ function Database:insertRemoteKey(sender_id, public_key)
 		local file = fs.open(REMOTE_KEYS_PATH, "r+")
 		if file then
 			file.seek("end", 0)
-			file.writeLine(tostring(sender_id) .. "=" .. tostring(public_key[1]) .. ":" .. tostring(public_key[2]))
+			file.writeLine(tostring(id) .. "=" .. tostring(public_key[1]) .. ":" .. tostring(public_key[2]))
 			file.close()
-			self.tables.remote_keys[sender_id] = public_key
+			self.tables.remote_keys[id] = public_key
 		else
 			return false, "cannot open remote keys table"
 		end
@@ -61,8 +61,8 @@ function Database:insertRemoteKey(sender_id, public_key)
 	return true, "insert successful"
 end
 
-function Database:getRemoteKey(sender_id, default)
-	return self.tables.remote_keys[sender_id] or default
+function Database:getRemoteKey(id, default)
+	return self.tables.remote_keys[id] or default
 end
 
 function Database:loadRemoteKeys()
