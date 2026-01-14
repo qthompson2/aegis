@@ -153,7 +153,7 @@ function Database:loadLocalUsers()
 
 				if type(username) == "string" and type(password_hash) == "string" then
 					if #username > 0 and #password_hash > 0 then
-						self.tables.remote_keys[username] = password_hash
+						self.tables.local_users[username] = password_hash
 					end
 				end
 				line = file.readLine()
