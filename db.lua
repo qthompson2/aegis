@@ -1,11 +1,11 @@
-Base = require("base")
+local Base = require("aegis.base")
 
-Database = {}
+local Database = {}
 
-BASE_PATH = ".aegis-db"
-REMOTE_KEYS_PATH = fs.combine(BASE_PATH, "remote_keys.table")
-LOCAL_USERS_PATH = fs.combine(BASE_PATH, "local_users.table")
-KEY_PATH = fs.combine(BASE_PATH, "key.txt")
+local BASE_PATH = ".aegis-db"
+local REMOTE_KEYS_PATH = fs.combine(BASE_PATH, "remote_keys.table")
+local LOCAL_USERS_PATH = fs.combine(BASE_PATH, "local_users.table")
+local KEY_PATH = fs.combine(BASE_PATH, "key.txt")
 
 function Database:new()
 	if self._db then

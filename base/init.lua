@@ -1,5 +1,5 @@
-Encryption = require("base.encryption")
-Hash = require("base.hash")
+Encryption = require("aegis.base.encryption")
+Hash = require("aegis.base.hash")
 
 return {
 	encypt = Encryption.encrypt,

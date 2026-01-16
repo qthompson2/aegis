@@ -1,7 +1,7 @@
-Base = require("base")
-Database = require("db"):new()
+local Base = require("aegis.base")
+local Database = require("aegis.db"):new()
 
-ALink = {}
+local ALink = {}
 
 ALink.open = function(side)
 	rednet.open(side)
