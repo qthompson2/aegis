@@ -1,6 +1,7 @@
 local Base = require("aegis.base")
 local Database = require("aegis.db"):new()
 
+local _running = false
 local ALink = {}
 
 ALink.open = function(side)
@@ -13,6 +14,10 @@ end
 
 ALink.isOpen = function(side)
 	return rednet.isOpen(side)
+end
+
+ALink.isRunning = function()
+	return _running
 end
 
 local function decrypt_message(sender_id, ciphertext)
@@ -122,7 +127,9 @@ ALink.receive = function(protocol_filter, timeout)
 	end
 end
 
-ALink._run = function ()
+ALink.run = function ()
+	ALink._running = true
+
 	local event_cache = {}
 	local function cache_incoming_events()
 		while true do
