@@ -128,7 +128,7 @@ ALink.receive = function(protocol_filter, timeout)
 end
 
 ALink.run = function ()
-	ALink._running = true
+	_running = true
 
 	local event_cache = {}
 	local function cache_incoming_events()
@@ -144,15 +144,17 @@ ALink.run = function ()
 		if event == "rednet_message" then
 			local sender_id, message, protocol = event_data[2], event_data[3], event_data[4]
 
-			if protocol:find("^alink") then
-				if type(message) == "table" then
-					if message["type"] == "key_request" then
-						rednet.send(sender_id, {
-							["type"] = "key_response",
-							["public_key"] = Database:getPublicKey(),
-						}, "alink:krrs")
-					elseif message["type"] == "data" then
-						parallel.waitForAny(cache_incoming_events, function() decrypt_and_queue(sender_id, message["data"]) end)
+			if type(protocol) == "string" then
+				if protocol:find("^alink") then
+					if type(message) == "table" then
+						if message["type"] == "key_request" then
+							rednet.send(sender_id, {
+								["type"] = "key_response",
+								["public_key"] = Database:getPublicKey(),
+							}, "alink:krrs")
+						elseif message["type"] == "data" then
+							parallel.waitForAny(cache_incoming_events, function() decrypt_and_queue(sender_id, message["data"]) end)
+						end
 					end
 				end
 			end
